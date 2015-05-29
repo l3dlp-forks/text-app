@@ -20,6 +20,7 @@ FILES = [
   'index.html',
   '_locales/en/messages.json',
   'css/app.css',
+  'css/print.css',
   'css/theme-dark.css',
   'css/theme-default.css',
   'css/theme-light.css',
@@ -56,10 +57,10 @@ CLOSURE_URL = 'http://closure-compiler.appspot.com/compile'
 BACKGROUND_EXTERNS = os.path.join(SOURCE_DIR, 'js/externs.js')
 JS_EXTERNS = None
 EXTERNS_URLS = [
-  'https://closure-compiler.googlecode.com' +
-      '/svn/trunk/contrib/externs/jquery-1.8.js',
-  'https://closure-compiler.googlecode.com' +
-      '/git/contrib/externs/google_analytics_api.js'
+  'https://raw.githubusercontent.com' +
+      '/google/closure-compiler/master/contrib/externs/jquery-1.8.js',
+  'https://raw.githubusercontent.com' +
+      '/google/closure-compiler/master/contrib/externs/google_analytics_api.js'
 ]
 
 SKIP_JS_FILES = []
@@ -113,10 +114,8 @@ def process_manifest(out_dir, version):
   manifest = json.load(open(os.path.join(SOURCE_DIR, MANIFEST)))
   if USE_LOCALIZED_NAME:
     manifest['name'] = '__MSG_extName__'
-    manifest['file_handlers']['text']['title'] = '__MSG_extName__'
   else:
     manifest['name'] = APP_NAME
-    manifest['file_handlers']['text']['title'] = APP_NAME
   manifest['version'] = version
 
   if IS_APP:
@@ -190,7 +189,7 @@ def compile_js(out_path, js_files, level, externs):
 
   for js_file in js_files:
     if os.path.basename(js_file) not in SKIP_JS_FILES:
-      js_code.append(open(os.path.join(SOURCE_DIR, js_file)).read())
+      js_code.append(open(os.path.join(SOURCE_DIR, js_file), encoding='utf-8').read())
 
   if externs:
     params.append(('js_externs', open(externs).read()))

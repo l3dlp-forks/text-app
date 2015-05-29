@@ -24,6 +24,7 @@ function EditorCodeMirror(editorElement, settings) {
   this.cm_.on('change', this.onChange.bind(this));
   this.setTheme();
   this.search_ = new Search(this.cm_);
+  // Mimic Sublime behaviour there.
   this.defaultTabHandler_ = CodeMirror.commands.defaultTab;
 }
 
@@ -150,6 +151,7 @@ EditorCodeMirror.prototype.setFontSize = function(fontSize) {
  */
 EditorCodeMirror.prototype.setTabSize = function(size) {
   this.cm_.setOption('tabSize', size);
+  this.cm_.setOption('indentUnit', size);
   this.replaceTabWithSpaces(this.settings_.get('spacestab'));
 };
 
@@ -185,6 +187,7 @@ EditorCodeMirror.prototype.setSmartIndent = function(val) {
  * @param {boolean} val
  */
 EditorCodeMirror.prototype.replaceTabWithSpaces = function(val) {
+  this.cm_.setOption('indentWithTabs', !val);
   if (val) {
     // Need to update this closure once the tabsize has changed. So, have to
     // call this method when it happens.
